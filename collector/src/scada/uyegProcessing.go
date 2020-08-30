@@ -105,6 +105,14 @@ func QueueProcess(client *uyeg.ModbusClient, queue *ItemQueue, tfChan chan<- []i
 							dbConn.NotResultQueryExec(fmt.Sprintf("INSERT INTO E_LOG(MAC_ID, LOG, CREATE_DATE) VALUES ('%s', '%s', NOW());", client.Device.MacId, derr["Error"].(string)))
 						}
 					}
+					sendData := ds
+					for _, item := range sendData {
+						itemMap := item.(map[string]interface{})
+						// fmt.Println(itemMap["time"], ":", itemMap["Curr"])
+						rCurr := fmt.Sprint(itemMap["Curr"])
+						rTime := (fmt.Sprint(itemMap["time"]))
+						dbConn.NotResultQueryExec(fmt.Sprintf("INSERT INTO third(MAC_ID, data, CREATE_DATE, Now) VALUES ('%s', '%s', '%s', Now());", client.Device.MacId, rCurr, rTime))
+					}
 					tfChan <- ds
 					ds = ds[:0] // 데이터 삭제
 				}

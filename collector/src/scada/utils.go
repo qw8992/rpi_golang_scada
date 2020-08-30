@@ -109,7 +109,7 @@ func SendRequest(packet string) {
 	// }
 	// defer res.Body.Close()
 
-	// startTime := time.Now()
+	startTime := time.Now()
 	req := fasthttp.AcquireRequest()
 	req.SetRequestURI(conf.API_URL)
 	req.Header.Add("Content-Type", "text/plain")
@@ -119,11 +119,11 @@ func SendRequest(packet string) {
 	res := fasthttp.AcquireResponse()
 	client := &fasthttp.Client{}
 	client.Do(req, res)
-	// runTime := time.Since(startTime)
-	// if runTime > 500*time.Millisecond {
-	// 	fmt.Println("SnedReuqest :", runTime)
-	// 	dbConn.NotResultQueryExec(fmt.Sprintf("INSERT INTO time(runtime, CREATE_DATE) VALUES ('%s', NOW());", runTime))
-	// }
+	runTime := time.Since(startTime)
+	if runTime > 500*time.Millisecond {
+		fmt.Println("SnedReuqest :", runTime)
+		dbConn.NotResultQueryExec(fmt.Sprintf("INSERT INTO time(runtime, CREATE_DATE) VALUES ('%s', NOW());", runTime))
+	}
 
 	// startTime = time.Now()
 	// var body []byte
